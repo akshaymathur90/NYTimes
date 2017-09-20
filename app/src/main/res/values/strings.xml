@@ -15,4 +15,12 @@
     <string name="label_sports">Sports</string>
     <string name="label_cancel">Cancel</string>
     <string name="label_save">Save</string>
+    <string name="sharedpref_file_name">settings</string>
+    <string name="key_begin_date">begin_date_key</string>
+    <string name="label_newest">Newest</string>
+    <string name="label_oldest">Oldest</string>
+    <string name="key_sort_order">sort_order_key</string>
+    <string name="key_checkbox_arts">checkbox_arts_key</string>
+    <string name="key_checkbox_fashion">checkbox_fashion_key</string>
+    <string name="key_checkbox_sports">checkbox_sports_key</string>
 </resources>
