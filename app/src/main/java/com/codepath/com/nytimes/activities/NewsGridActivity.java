@@ -35,7 +35,7 @@ public class NewsGridActivity extends AppCompatActivity {
         mFragmentManager = getSupportFragmentManager();
         Fragment fragment = mFragmentManager.findFragmentById(R.id.fl_fragment_container);
         if(fragment==null){
-            fragment = NewsGridFragment.newInstance("trump");
+            fragment = NewsGridFragment.newInstance(null);
             mFragmentManager.beginTransaction()
                     .add(R.id.fl_fragment_container,fragment,NewsGridFragment.FRAGMENT_TAG)
                     .commit();
@@ -89,6 +89,10 @@ public class NewsGridActivity extends AppCompatActivity {
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
             Log.d(TAG, query);
+
+            mFragmentManager.beginTransaction().replace(R.id.fl_fragment_container,
+                    NewsGridFragment.newInstance(query),NewsGridFragment.FRAGMENT_TAG).commit();
+
         }
     }
 

@@ -3,6 +3,7 @@ package com.codepath.com.nytimes.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +21,12 @@ public class Doc implements Parcelable {
     @SerializedName("headline")
     @Expose
     private Headline headline;
-    @SerializedName("news_desk")
+    @SerializedName("new_desk")
     @Expose
     private String newsDesk;
+    @SerializedName("snippet")
+    @Expose
+    private String snippet;
 
     public String getWebUrl() {
         return webUrl;
@@ -38,6 +42,17 @@ public class Doc implements Parcelable {
 
     public void setMultimedia(List<Multimedium> multimedia) {
         this.multimedia = multimedia;
+    }
+
+    public String getThumbnailURL(){
+
+        for(Multimedium m:this.multimedia){
+            Log.d("Model: Doc","Image subtype--> "+m.getSubtype());
+            if(m.getSubtype().equalsIgnoreCase("thumbnail")){
+                return m.getUrl();
+            }
+        }
+        return null;
     }
 
     public Headline getHeadline() {
@@ -56,6 +71,13 @@ public class Doc implements Parcelable {
         this.newsDesk = newsDesk;
     }
 
+    public String getSnippet() {
+        return snippet;
+    }
+
+    public void setSnippet(String snippet) {
+        this.snippet = snippet;
+    }
 
     @Override
     public int describeContents() {
@@ -68,6 +90,7 @@ public class Doc implements Parcelable {
         dest.writeList(this.multimedia);
         dest.writeParcelable(this.headline, flags);
         dest.writeString(this.newsDesk);
+        dest.writeString(this.snippet);
     }
 
     public Doc() {
@@ -79,6 +102,7 @@ public class Doc implements Parcelable {
         in.readList(this.multimedia, Multimedium.class.getClassLoader());
         this.headline = in.readParcelable(Headline.class.getClassLoader());
         this.newsDesk = in.readString();
+        this.snippet = in.readString();
     }
 
     public static final Creator<Doc> CREATOR = new Creator<Doc>() {

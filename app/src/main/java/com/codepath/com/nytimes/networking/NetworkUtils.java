@@ -30,7 +30,7 @@ public class NetworkUtils {
     private final static String TAG = "NetworkUtils";
     private final String API_KEY= "6973729bd76c46819a940bb6b55c6b0d";
     private NYTimesAPI mNYTimesAPI;
-    private final String filterLines = "web_url,headline,multimedia,news_desk";
+    private final String filterLines = "web_url,headline,multimedia,news_desk,snippet";
     private Context mContext;
     public NetworkUtils(Context context){
         mBaseURL = "https://api.nytimes.com/svc/search/v2/";
@@ -51,9 +51,9 @@ public class NetworkUtils {
 
         Settings settings = SharedPreferenceUtils.getAllSettings(mContext);
         Map<String,String> queryParams = new HashMap<>();
-        queryParams.put(mContext.getString(R.string.key_query_string),queryString);
+        if(queryString!=null) queryParams.put(mContext.getString(R.string.key_query_string),queryString);
         queryParams.put(mContext.getString(R.string.key_sort_order),settings.getSortOrder());
-        queryParams.put(mContext.getString(R.string.key_filter_query),settings.getNewsDesks());
+        if(settings.getNewsDesks()!=null) queryParams.put(mContext.getString(R.string.key_filter_query),settings.getNewsDesks());
         queryParams.put(mContext.getString(R.string.key_api_key),API_KEY);
         queryParams.put(mContext.getString(R.string.key_page_number),String.valueOf(page));
         queryParams.put(mContext.getString(R.string.key_begin_date),settings.getBeginDate());
