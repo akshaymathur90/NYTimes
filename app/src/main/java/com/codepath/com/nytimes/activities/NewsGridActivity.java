@@ -1,4 +1,4 @@
-package com.codepath.com.nytimes;
+package com.codepath.com.nytimes.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
@@ -13,7 +13,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.codepath.com.nytimes.R;
 import com.codepath.com.nytimes.databinding.ActivityNewsGridBinding;
+import com.codepath.com.nytimes.fragments.NewsGridFragment;
+import com.codepath.com.nytimes.fragments.SettingsDialogFragment;
 
 
 public class NewsGridActivity extends AppCompatActivity {

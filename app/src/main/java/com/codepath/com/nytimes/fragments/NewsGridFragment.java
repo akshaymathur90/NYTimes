@@ -1,4 +1,4 @@
-package com.codepath.com.nytimes;
+package com.codepath.com.nytimes.fragments;
 
 
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.codepath.com.nytimes.R;
 import com.codepath.com.nytimes.models.Stories;
 import com.codepath.com.nytimes.networking.NetworkUtils;
 

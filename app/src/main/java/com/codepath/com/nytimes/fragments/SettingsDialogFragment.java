@@ -1,14 +1,12 @@
-package com.codepath.com.nytimes;
+package com.codepath.com.nytimes.fragments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.PopupMenu;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -19,12 +17,13 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+import com.codepath.com.nytimes.R;
 import com.codepath.com.nytimes.databinding.FragmentSettingsBinding;
+import com.codepath.com.nytimes.utils.SharedPreferenceUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by akshaymathur on 9/19/17.
@@ -40,7 +39,7 @@ public class SettingsDialogFragment extends DialogFragment implements View.OnCli
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        mFragmentSettingsBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_settings,container,false);
+        mFragmentSettingsBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_settings,container,false);
         return mFragmentSettingsBinding.getRoot();
     }
 

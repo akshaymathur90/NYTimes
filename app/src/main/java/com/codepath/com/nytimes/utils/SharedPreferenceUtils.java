@@ -1,7 +1,9 @@
-package com.codepath.com.nytimes;
+package com.codepath.com.nytimes.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.codepath.com.nytimes.R;
 
 /**
  * Created by akshaymathur on 9/19/17.
