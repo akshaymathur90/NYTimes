@@ -59,7 +59,7 @@ public class SettingsDialogFragment extends DialogFragment implements View.OnCli
     private void setDataInFragment() {
         SharedPreferences sharedPref = SharedPreferenceUtils.getSharePreferences(getActivity());
         mFragmentSettingsBinding.etBeginDate.setText(
-                sharedPref.getString(getString(R.string.key_begin_date),getDefaultDate()));
+                sharedPref.getString(getString(R.string.key_begin_date),SharedPreferenceUtils.getDefaultDate()));
         mFragmentSettingsBinding.etSortOrder.setText(
                 sharedPref.getString(getString(R.string.key_sort_order),getString(R.string.label_newest)));
         mFragmentSettingsBinding.cbArts.setChecked(
@@ -140,12 +140,7 @@ public class SettingsDialogFragment extends DialogFragment implements View.OnCli
         }
     }
 
-    private String getDefaultDate(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2000,0,1);
-        DateFormat dateFormat = SimpleDateFormat.getDateInstance();
-        return dateFormat.format(calendar.getTime());
-    }
+
 
     @Override
     public void onClick(View view) {

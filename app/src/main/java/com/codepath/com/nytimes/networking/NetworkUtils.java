@@ -3,8 +3,15 @@ package com.codepath.com.nytimes.networking;
 import android.content.Context;
 import android.util.Log;
 
+import com.codepath.com.nytimes.R;
 import com.codepath.com.nytimes.models.ApiResponse;
+import com.codepath.com.nytimes.models.Settings;
 import com.codepath.com.nytimes.models.Stories;
+import com.codepath.com.nytimes.utils.SharedPreferenceUtils;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,9 +47,18 @@ public class NetworkUtils {
     }
 
 
-    public void getNewsItems(String queryString, String filterQuery, String sortOrder, String beginDate, int page, final NetworkUtilResponse networkUtilResponse){
+    public void getNewsItems(String queryString,int page, final NetworkUtilResponse networkUtilResponse){
 
-        Call<Stories> call = mNYTimesAPI.getResultsFromPage(queryString,API_KEY,filterQuery,filterLines,page,sortOrder,beginDate);
+        Settings settings = SharedPreferenceUtils.getAllSettings(mContext);
+        Map<String,String> queryParams = new HashMap<>();
+        queryParams.put(mContext.getString(R.string.key_query_string),queryString);
+        queryParams.put(mContext.getString(R.string.key_sort_order),settings.getSortOrder());
+        queryParams.put(mContext.getString(R.string.key_filter_query),settings.getNewsDesks());
+        queryParams.put(mContext.getString(R.string.key_api_key),API_KEY);
+        queryParams.put(mContext.getString(R.string.key_page_number),String.valueOf(page));
+        queryParams.put(mContext.getString(R.string.key_begin_date),settings.getBeginDate());
+        queryParams.put(mContext.getString(R.string.key_filter_lines),filterLines);
+        Call<Stories> call = mNYTimesAPI.getResults(queryParams);
         call.enqueue(new Callback<Stories>() {
             @Override
             public void onResponse(Call<Stories> call, Response<Stories> response) {

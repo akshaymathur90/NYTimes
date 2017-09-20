@@ -35,7 +35,7 @@ public class NewsGridActivity extends AppCompatActivity {
         mFragmentManager = getSupportFragmentManager();
         Fragment fragment = mFragmentManager.findFragmentById(R.id.fl_fragment_container);
         if(fragment==null){
-            fragment = NewsGridFragment.newInstance(null);
+            fragment = NewsGridFragment.newInstance("trump");
             mFragmentManager.beginTransaction()
                     .add(R.id.fl_fragment_container,fragment,NewsGridFragment.FRAGMENT_TAG)
                     .commit();

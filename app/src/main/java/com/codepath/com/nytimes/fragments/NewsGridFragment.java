@@ -68,7 +68,7 @@ public class NewsGridFragment extends Fragment{
     public void fetchDataFromAPI(){
 
         NetworkUtils networkUtils = new NetworkUtils(getActivity());
-        networkUtils.getNewsItems(mQuery, "", "newest", null, 0, new NetworkUtils.NetworkUtilResponse() {
+        networkUtils.getNewsItems(mQuery,0, new NetworkUtils.NetworkUtilResponse() {
             @Override
             public void onSuccess(Stories stories) {
                 Log.d(FRAGMENT_TAG,"Got Retrofit Response");
