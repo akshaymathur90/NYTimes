@@ -4,6 +4,7 @@ package com.codepath.com.nytimes.fragments;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import com.codepath.com.nytimes.databinding.FragmentNewsGridBinding;
 import com.codepath.com.nytimes.models.Doc;
 import com.codepath.com.nytimes.models.Stories;
 import com.codepath.com.nytimes.networking.NetworkUtils;
+import com.codepath.com.nytimes.utils.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +36,6 @@ public class NewsGridFragment extends Fragment{
     private FragmentNewsGridBinding mFragmentNewsGridBinding;
     NewsItemRecyclerViewAdapter mNewsItemRecyclerViewAdapter;
     private List<Doc> mDocList;
-
     // TODO: Rename and change types of parameters
     private String mQuery;
 
@@ -77,14 +78,20 @@ public class NewsGridFragment extends Fragment{
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         mFragmentNewsGridBinding.rvNewsGridItems.setLayoutManager(staggeredGridLayoutManager);
         mFragmentNewsGridBinding.rvNewsGridItems.setAdapter(mNewsItemRecyclerViewAdapter);
-        fetchDataFromAPI();
+        mFragmentNewsGridBinding.rvNewsGridItems.addOnScrollListener(new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                fetchDataFromAPI(page);
+            }
+        });
+        fetchDataFromAPI(0);
         return mFragmentNewsGridBinding.getRoot();
     }
 
-    public void fetchDataFromAPI(){
+    public void fetchDataFromAPI(int page){
 
         NetworkUtils networkUtils = new NetworkUtils(getActivity());
-        networkUtils.getNewsItems(mQuery,0, new NetworkUtils.NetworkUtilResponse() {
+        networkUtils.getNewsItems(mQuery,page, new NetworkUtils.NetworkUtilResponse() {
             @Override
             public void onSuccess(Stories stories) {
                 Log.d(FRAGMENT_TAG,"Got Retrofit Response");
