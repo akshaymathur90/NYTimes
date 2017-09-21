@@ -37,11 +37,17 @@ public class NewsItemRecyclerViewAdapter extends RecyclerView.Adapter {
     }
 
     public void addData(List<Doc> data){
-        int initalSize = mData.size()-1;
+        int initalSize = mData.size();
         mData.addAll(data);
-        int finalSize = mData.size()-1;
+        int finalSize = mData.size();
         notifyItemRangeChanged(initalSize,finalSize);
     }
+
+    public void clear(){
+        mData.clear();
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

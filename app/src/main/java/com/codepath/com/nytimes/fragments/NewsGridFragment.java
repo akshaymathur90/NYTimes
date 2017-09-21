@@ -1,9 +1,13 @@
 package com.codepath.com.nytimes.fragments;
 
 
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -17,6 +21,7 @@ import com.codepath.com.nytimes.databinding.FragmentNewsGridBinding;
 import com.codepath.com.nytimes.models.Doc;
 import com.codepath.com.nytimes.models.Stories;
 import com.codepath.com.nytimes.networking.NetworkUtils;
+import com.codepath.com.nytimes.recievers.InternetCheckReceiver;
 import com.codepath.com.nytimes.utils.EndlessRecyclerViewScrollListener;
 
 import java.util.ArrayList;
@@ -36,7 +41,9 @@ public class NewsGridFragment extends Fragment{
     private FragmentNewsGridBinding mFragmentNewsGridBinding;
     NewsItemRecyclerViewAdapter mNewsItemRecyclerViewAdapter;
     private List<Doc> mDocList;
-    private int toalPages;
+    private int mTotalPages;
+    private InternetCheckReceiver mBroadcastReceiver;
+    private EndlessRecyclerViewScrollListener mEndlessRecyclerViewScrollListener;
     // TODO: Rename and change types of parameters
     private String mQuery;
 
@@ -79,12 +86,37 @@ public class NewsGridFragment extends Fragment{
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
         mFragmentNewsGridBinding.rvNewsGridItems.setLayoutManager(staggeredGridLayoutManager);
         mFragmentNewsGridBinding.rvNewsGridItems.setAdapter(mNewsItemRecyclerViewAdapter);
-        mFragmentNewsGridBinding.rvNewsGridItems.addOnScrollListener(new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
+        mEndlessRecyclerViewScrollListener = new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                if(page<=toalPages) fetchDataFromAPI(page);
+                if(page<= mTotalPages && mBroadcastReceiver.isInternetAvailable()) {
+                    mFragmentNewsGridBinding.swipeContainer.setRefreshing(true);
+                    fetchDataFromAPI(page);
+                }else{
+                    Snackbar.make(mFragmentNewsGridBinding.getRoot(),getString(R.string.snackbar_text_internet_lost),
+                            Snackbar.LENGTH_LONG).show();
+                }
+            }
+        };
+        mFragmentNewsGridBinding.rvNewsGridItems.addOnScrollListener(mEndlessRecyclerViewScrollListener);
+        mFragmentNewsGridBinding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(mBroadcastReceiver.isInternetAvailable()) {
+                    mNewsItemRecyclerViewAdapter.clear();
+                    mEndlessRecyclerViewScrollListener.resetState();
+                    fetchDataFromAPI(0);
+                }else{
+                    mFragmentNewsGridBinding.swipeContainer.setRefreshing(false);
+                    Snackbar.make(mFragmentNewsGridBinding.getRoot(),getString(R.string.snackbar_text_internet_lost),
+                            Snackbar.LENGTH_LONG).show();
+                }
             }
         });
+        mFragmentNewsGridBinding.swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
         fetchDataFromAPI(0);
         return mFragmentNewsGridBinding.getRoot();
     }
@@ -98,12 +130,27 @@ public class NewsGridFragment extends Fragment{
             public void onSuccess(Stories stories) {
                 Log.d(FRAGMENT_TAG,"Got Retrofit Response");
                 Log.d(FRAGMENT_TAG,"Number of stories= "+stories.getResponse().getMeta().getHits());
-                toalPages = stories.getResponse().getMeta().getHits() / 10;
+                mTotalPages = stories.getResponse().getMeta().getHits() / 10;
                 List<Doc> newData = stories.getResponse().getDocs();
                 mNewsItemRecyclerViewAdapter.addData(newData);
+                mFragmentNewsGridBinding.swipeContainer.setRefreshing(false);
             }
         });
 
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        IntentFilter intentFilter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
+        mBroadcastReceiver = new InternetCheckReceiver(mFragmentNewsGridBinding.getRoot());
+        getActivity().registerReceiver(mBroadcastReceiver,intentFilter);
+    }
+
+    @Override
+    public void onStop() {
+        getActivity().unregisterReceiver(mBroadcastReceiver);
+        super.onStop();
     }
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">NYTimes</string>
+    <string name="app_name">The New York Times</string>
     <string name="app_label">Search NY Times</string>
     <string name="search_hint">Search</string>
     <string name="search_title">Search</string>
@@ -29,4 +29,6 @@
     <string name="key_page_number">page</string>
     <string name="key_filter_lines">fl</string>
     <string name="image_base_url">https://www.nytimes.com/</string>
+    <string name="snackbar_text_internet_lost">Disconnected from Internet</string>
+    <string name="snackbar_text_internet_available">Connected to Internet</string>
 </resources>
