@@ -36,6 +36,7 @@ public class NewsGridFragment extends Fragment{
     private FragmentNewsGridBinding mFragmentNewsGridBinding;
     NewsItemRecyclerViewAdapter mNewsItemRecyclerViewAdapter;
     private List<Doc> mDocList;
+    private int toalPages;
     // TODO: Rename and change types of parameters
     private String mQuery;
 
@@ -81,7 +82,7 @@ public class NewsGridFragment extends Fragment{
         mFragmentNewsGridBinding.rvNewsGridItems.addOnScrollListener(new EndlessRecyclerViewScrollListener(staggeredGridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                fetchDataFromAPI(page);
+                if(page<=toalPages) fetchDataFromAPI(page);
             }
         });
         fetchDataFromAPI(0);
@@ -97,6 +98,7 @@ public class NewsGridFragment extends Fragment{
             public void onSuccess(Stories stories) {
                 Log.d(FRAGMENT_TAG,"Got Retrofit Response");
                 Log.d(FRAGMENT_TAG,"Number of stories= "+stories.getResponse().getMeta().getHits());
+                toalPages = stories.getResponse().getMeta().getHits() / 10;
                 List<Doc> newData = stories.getResponse().getDocs();
                 mNewsItemRecyclerViewAdapter.addData(newData);
             }

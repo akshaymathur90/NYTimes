@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_border"
+        android:layout_margin="@dimen/item_grid_margin">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_headline"
+                tools:text="asdadasdasdasdadasdadsdasdas"
+                android:textStyle="bold"
+                android:textColor="@color/darkgrey"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_news_synopsis"
+                android:layout_below="@id/tv_headline"
+                tools:text="adasdadadadarqwqrqrqrqrqrqrqrqr"
+                android:layout_marginTop="@dimen/text_top_margin"
+                android:maxLines="3"
+                android:ellipsize="end"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_news_desk"
+                android:layout_below="@id/tv_news_synopsis"
+                tools:text="Sports"
+                android:textAllCaps="true"
+                android:background="@color/colorAccent"
+                android:textColor="@color/white"
+                android:padding="@dimen/news_desk_text_padding"
+                android:layout_marginTop="@dimen/text_top_margin"/>
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</layout>
