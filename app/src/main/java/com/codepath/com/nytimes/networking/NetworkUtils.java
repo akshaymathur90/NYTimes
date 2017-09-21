@@ -63,10 +63,12 @@ public class NetworkUtils {
             @Override
             public void onResponse(Call<Stories> call, Response<Stories> response) {
                 int statusCode = response.code();
-                Stories stories = response.body();
-                Log.d(TAG,"Status code== "+statusCode);
-                Log.d(TAG,"Total Stories== "+stories.getResponse().getMeta().getHits());
-                networkUtilResponse.onSuccess(stories);
+                Log.d(TAG, "Status code== " + statusCode);
+                if(statusCode==200) {
+                    Stories stories = response.body();
+                    Log.d(TAG, "Total Stories== " + stories.getResponse().getMeta().getHits());
+                    networkUtilResponse.onSuccess(stories);
+                }
             }
 
             @Override

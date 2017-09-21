@@ -29,7 +29,6 @@ public class NewsGridActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_news_grid);
-
         setSupportActionBar(binding.myToolbar);
 
         mFragmentManager = getSupportFragmentManager();

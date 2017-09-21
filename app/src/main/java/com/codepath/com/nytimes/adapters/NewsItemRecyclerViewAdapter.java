@@ -1,6 +1,9 @@
 package com.codepath.com.nytimes.adapters;
 
 import android.content.Context;
+import android.net.Uri;
+import android.support.customtabs.CustomTabsIntent;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,7 +53,7 @@ public class NewsItemRecyclerViewAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         ThumbnailViewHolder viewHolder = (ThumbnailViewHolder) holder;
-        Doc doc = mData.get(position);
+        final Doc doc = mData.get(position);
         viewHolder.mNewsItemLayoutBinding.tvHeadline.setText(doc.getHeadline().getMain());
         viewHolder.mNewsItemLayoutBinding.tvNewsSynopsis.setText(doc.getSnippet());
         Log.d(TAG,"news desk-->" +doc.getNewsDesk());
@@ -62,6 +65,23 @@ public class NewsItemRecyclerViewAdapter extends RecyclerView.Adapter {
         Log.d(TAG,"image url-->" +imageURL);
 
         Glide.with(mContext).load(imageURL).into(viewHolder.mNewsItemLayoutBinding.ivNewsThumbnail);
+
+        viewHolder.mNewsItemLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Use a CustomTabsIntent.Builder to configure CustomTabsIntent.
+                String url = doc.getWebUrl();
+                CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+                // set toolbar color and/or setting custom actions before invoking build()
+                builder.setToolbarColor(ContextCompat.getColor(mContext, R.color.colorAccent));
+                // Once ready, call CustomTabsIntent.Builder.build() to create a CustomTabsIntent
+                CustomTabsIntent customTabsIntent = builder.build();
+                builder.addDefaultShareMenuItem();
+                // and launch the desired Url with CustomTabsIntent.launchUrl()
+                customTabsIntent.launchUrl(mContext, Uri.parse(url));
+
+            }
+        });
     }
 
     @Override

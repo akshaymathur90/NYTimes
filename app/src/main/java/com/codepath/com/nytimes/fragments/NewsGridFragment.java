@@ -90,6 +90,7 @@ public class NewsGridFragment extends Fragment{
 
     public void fetchDataFromAPI(int page){
 
+        Log.d(FRAGMENT_TAG,"Loading page--> "+page);
         NetworkUtils networkUtils = new NetworkUtils(getActivity());
         networkUtils.getNewsItems(mQuery,page, new NetworkUtils.NetworkUtilResponse() {
             @Override
