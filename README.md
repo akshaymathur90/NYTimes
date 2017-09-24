@@ -48,8 +48,6 @@ Here's a walkthrough of implemented user stories:
 
 <img src='https://www.dropbox.com/s/eda3me343yaqzia/assignment2.mp4' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
-GIF created with [LiceCap](http://www.cockos.com/licecap/).
-
 ## Open-source libraries used
 
 - [Retrofit](https://github.com/square/retrofit) - Simple asynchronous HTTP requests with JSON parsing using GSON
