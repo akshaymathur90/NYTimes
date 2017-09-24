@@ -44,9 +44,7 @@ The following **additional** features are implemented:
 
 ## Video Walkthrough
 
-Here's a walkthrough of implemented user stories:
-
-<img src='https://www.dropbox.com/s/eda3me343yaqzia/assignment2.mp4' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+Here's a [walkthrough](https://www.dropbox.com/s/eda3me343yaqzia/assignment2.mp4) of implemented user stories:
 
 ## Open-source libraries used
 
