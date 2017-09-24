@@ -17,8 +17,9 @@ public class Settings {
     private boolean mIsArtsChecked;
     private boolean mIsFashionChecked;
     private boolean mIsSportsChecked;
+    private boolean mChromeTab;
 
-    public String getBeginDate() {
+    public String getBeginDateforAPI() {
         SimpleDateFormat toFormat = new SimpleDateFormat("yyyyMMdd");
         toFormat.setLenient(false);
         DateFormat fromFormat = SimpleDateFormat.getDateInstance();
@@ -30,6 +31,10 @@ public class Settings {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public String getBeginDate() {
+        return mBeginDate;
     }
 
     public void setBeginDate(String beginDate) {
@@ -66,6 +71,14 @@ public class Settings {
 
     public void setSportsChecked(boolean sportsChecked) {
         mIsSportsChecked = sportsChecked;
+    }
+
+    public boolean isChromeTab() {
+        return mChromeTab;
+    }
+
+    public void setChromeTab(boolean chromeTab) {
+        mChromeTab = chromeTab;
     }
 
     public String getNewsDesks(){

@@ -1,11 +1,14 @@
 package com.codepath.com.nytimes.fragments;
 
 
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -32,6 +35,7 @@ import com.codepath.com.nytimes.networking.NetworkUtils;
 import com.codepath.com.nytimes.recievers.InternetCheckReceiver;
 import com.codepath.com.nytimes.utils.EndlessRecyclerViewScrollListener;
 import com.codepath.com.nytimes.utils.ItemClickSupport;
+import com.codepath.com.nytimes.utils.SharedPreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,25 +120,14 @@ public class NewsGridFragment extends Fragment{
                         // do it
                         List<Doc> data = mNewsItemRecyclerViewAdapter.getData();
                         final Doc doc = data.get(position);
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setTitle(getString(R.string.open_with_label));
-                        builder.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                openChromeTab(doc);
-                            }
-                        });
-                        builder.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
-                                intent.putExtra(NewsDetailActivity.DOC_KEY,doc);
-                                startActivity(intent);
-                            }
-                        });
-                        builder.show();
 
-
+                        if (SharedPreferenceUtils.openInChrome(getActivity())) {
+                            openChromeTab(doc);
+                        }else{
+                            Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+                            intent.putExtra(NewsDetailActivity.DOC_KEY,doc);
+                            startActivity(intent);
+                        }
                     }
                 }
         );
@@ -214,15 +207,27 @@ public class NewsGridFragment extends Fragment{
     }
 
     private void openChromeTab(Doc doc){
-        // Use a CustomTabsIntent.Builder to configure CustomTabsIntent.
         String url = doc.getWebUrl();
+        // Use a CustomTabsIntent.Builder to configure CustomTabsIntent.
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_action_share);
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, url);
+
+        int requestCode = 100;
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(getActivity(),
+                requestCode,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
         CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        builder.setActionButton(bitmap, "Share Link", pendingIntent, true);
         // set toolbar color and/or setting custom actions before invoking build()
         builder.setToolbarColor(ContextCompat.getColor(getActivity(), R.color.colorAccent));
         // Once ready, call CustomTabsIntent.Builder.build() to create a CustomTabsIntent
         CustomTabsIntent customTabsIntent = builder.build();
-        builder.addDefaultShareMenuItem();
-        // and launch the desired Url with CustomTabsIntent.launchUrl()
+
         customTabsIntent.launchUrl(getActivity(), Uri.parse(url));
     }
 }

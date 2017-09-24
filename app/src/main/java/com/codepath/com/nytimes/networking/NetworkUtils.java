@@ -57,7 +57,7 @@ public class NetworkUtils {
         if(settings.getNewsDesks()!=null) queryParams.put(mContext.getString(R.string.key_filter_query),settings.getNewsDesks());
         queryParams.put(mContext.getString(R.string.key_api_key),API_KEY);
         queryParams.put(mContext.getString(R.string.key_page_number),String.valueOf(page));
-        queryParams.put(mContext.getString(R.string.key_begin_date),settings.getBeginDate());
+        queryParams.put(mContext.getString(R.string.key_begin_date),settings.getBeginDateforAPI());
         queryParams.put(mContext.getString(R.string.key_filter_lines),filterLines);
         Call<Stories> call = mNYTimesAPI.getResults(queryParams);
         call.enqueue(new Callback<Stories>() {

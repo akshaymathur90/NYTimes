@@ -19,6 +19,7 @@ import android.widget.EditText;
 
 import com.codepath.com.nytimes.R;
 import com.codepath.com.nytimes.databinding.FragmentSettingsBinding;
+import com.codepath.com.nytimes.models.Settings;
 import com.codepath.com.nytimes.utils.SharedPreferenceUtils;
 
 import java.text.DateFormat;
@@ -57,17 +58,13 @@ public class SettingsDialogFragment extends DialogFragment implements View.OnCli
     }
 
     private void setDataInFragment() {
-        SharedPreferences sharedPref = SharedPreferenceUtils.getSharePreferences(getActivity());
-        mFragmentSettingsBinding.etBeginDate.setText(
-                sharedPref.getString(getString(R.string.key_begin_date),SharedPreferenceUtils.getDefaultDate()));
-        mFragmentSettingsBinding.etSortOrder.setText(
-                sharedPref.getString(getString(R.string.key_sort_order),getString(R.string.label_newest)));
-        mFragmentSettingsBinding.cbArts.setChecked(
-                sharedPref.getBoolean(getString(R.string.key_checkbox_arts),false));
-        mFragmentSettingsBinding.cbFashionStyle.setChecked(
-                sharedPref.getBoolean(getString(R.string.key_checkbox_fashion),false));
-        mFragmentSettingsBinding.cbSports.setChecked(
-                sharedPref.getBoolean(getString(R.string.key_checkbox_sports),false));
+        Settings settings = SharedPreferenceUtils.getAllSettings(getActivity());
+        mFragmentSettingsBinding.etBeginDate.setText(settings.getBeginDate());
+        mFragmentSettingsBinding.etSortOrder.setText(settings.getSortOrder());
+        mFragmentSettingsBinding.cbArts.setChecked(settings.isArtsChecked());
+        mFragmentSettingsBinding.cbFashionStyle.setChecked(settings.isFashionChecked());
+        mFragmentSettingsBinding.cbSports.setChecked(settings.isSportsChecked());
+        mFragmentSettingsBinding.switchChromeTab.setChecked(settings.isChromeTab());
     }
 
     private void openPopUpMenu(final EditText view) {
@@ -107,6 +104,7 @@ public class SettingsDialogFragment extends DialogFragment implements View.OnCli
                 mFragmentSettingsBinding.cbFashionStyle.isChecked());
         editor.putBoolean(getString(R.string.key_checkbox_sports),
                 mFragmentSettingsBinding.cbSports.isChecked());
+        editor.putBoolean(getString(R.string.key_chrome_tab),mFragmentSettingsBinding.switchChromeTab.isChecked());
         editor.apply();
 
     }

@@ -30,15 +30,21 @@ public class SharedPreferenceUtils {
         settings.setSportsChecked(sharedPreferences.getBoolean(context.getString(R.string.key_checkbox_sports),false));
         settings.setBeginDate(sharedPreferences.getString(context.getString(R.string.key_begin_date),getDefaultDate()));
         settings.setSortOrder(sharedPreferences.getString(context.getString(R.string.key_sort_order),context.getString(R.string.label_newest)));
+        settings.setChromeTab(sharedPreferences.getBoolean(context.getString(R.string.key_chrome_tab),true));
 
         return settings;
 
     }
 
-    public static String getDefaultDate(){
+    private static String getDefaultDate(){
         Calendar calendar = Calendar.getInstance();
         calendar.set(2000,0,1);
         DateFormat dateFormat = SimpleDateFormat.getDateInstance();
         return dateFormat.format(calendar.getTime());
+    }
+
+    public static boolean openInChrome(Context context){
+        return getSharePreferences(context)
+                .getBoolean(context.getString(R.string.key_chrome_tab),true);
     }
 }

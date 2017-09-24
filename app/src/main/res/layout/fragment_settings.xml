@@ -89,6 +89,21 @@
             android:id="@+id/cb_sports"
             android:text="@string/label_sports"
             android:layout_below="@id/cb_fashion_style"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_use_chrome_tabs"
+            android:layout_below="@id/cb_sports"
+            android:layout_marginTop="@dimen/text_top_margin"
+            android:id="@+id/tv_use_chrome"
+            android:textColor="@color/colorAccent"/>
+        <android.support.v7.widget.SwitchCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/cb_sports"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:id="@+id/switch_chrome_tab"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -97,14 +112,14 @@
             android:id="@+id/btn_cancel"
             style="?android:borderlessButtonStyle"
             android:textColor="@color/colorAccent"
-            android:layout_below="@id/cb_sports"
+            android:layout_below="@id/tv_use_chrome"
             android:layout_toLeftOf="@+id/btn_save"
             android:layout_toStartOf="@+id/btn_save"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/label_save"
-            android:layout_below="@id/cb_sports"
+            android:layout_below="@id/tv_use_chrome"
             android:id="@+id/btn_save"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"

@@ -34,4 +34,6 @@
     <string name="open_with_label">Open with Chrome Tab?</string>
     <string name="positive_button">Yes</string>
     <string name="no">No</string>
+    <string name="label_use_chrome_tabs">Use Chrome Tabs</string>
+    <string name="key_chrome_tab">chrome_tab_key</string>
 </resources>
