@@ -44,6 +44,7 @@ public class NetworkUtils {
 
     public interface NetworkUtilResponse{
         void onSuccess(Stories stories);
+        void onFailure();
     }
 
 
@@ -68,6 +69,8 @@ public class NetworkUtils {
                     Stories stories = response.body();
                     Log.d(TAG, "Total Stories== " + stories.getResponse().getMeta().getHits());
                     networkUtilResponse.onSuccess(stories);
+                }else{
+                    networkUtilResponse.onFailure();
                 }
             }
 

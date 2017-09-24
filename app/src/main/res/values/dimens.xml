@@ -6,5 +6,5 @@
     <dimen name="title_margin">16dp</dimen>
     <dimen name="text_top_margin">8dp</dimen>
     <dimen name="item_grid_margin">5dp</dimen>
-    <dimen name="news_desk_text_padding">2dp</dimen>
+    <dimen name="news_desk_text_padding">4dp</dimen>
 </resources>

@@ -31,4 +31,7 @@
     <string name="image_base_url">https://www.nytimes.com/</string>
     <string name="snackbar_text_internet_lost">Disconnected from Internet</string>
     <string name="snackbar_text_internet_available">Connected to Internet</string>
+    <string name="open_with_label">Open with Chrome Tab?</string>
+    <string name="positive_button">Yes</string>
+    <string name="no">No</string>
 </resources>

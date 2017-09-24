@@ -2,12 +2,19 @@ package com.codepath.com.nytimes.fragments;
 
 
 import android.content.BroadcastReceiver;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -16,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.codepath.com.nytimes.R;
+import com.codepath.com.nytimes.activities.NewsDetailActivity;
 import com.codepath.com.nytimes.adapters.NewsItemRecyclerViewAdapter;
 import com.codepath.com.nytimes.databinding.FragmentNewsGridBinding;
 import com.codepath.com.nytimes.models.Doc;
@@ -23,6 +31,7 @@ import com.codepath.com.nytimes.models.Stories;
 import com.codepath.com.nytimes.networking.NetworkUtils;
 import com.codepath.com.nytimes.recievers.InternetCheckReceiver;
 import com.codepath.com.nytimes.utils.EndlessRecyclerViewScrollListener;
+import com.codepath.com.nytimes.utils.ItemClickSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +53,7 @@ public class NewsGridFragment extends Fragment{
     private int mTotalPages;
     private InternetCheckReceiver mBroadcastReceiver;
     private EndlessRecyclerViewScrollListener mEndlessRecyclerViewScrollListener;
+    private int retryRemaining = 5;
     // TODO: Rename and change types of parameters
     private String mQuery;
 
@@ -99,6 +109,35 @@ public class NewsGridFragment extends Fragment{
             }
         };
         mFragmentNewsGridBinding.rvNewsGridItems.addOnScrollListener(mEndlessRecyclerViewScrollListener);
+        ItemClickSupport.addTo(mFragmentNewsGridBinding.rvNewsGridItems).setOnItemClickListener(
+                new ItemClickSupport.OnItemClickListener() {
+                    @Override
+                    public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                        // do it
+                        List<Doc> data = mNewsItemRecyclerViewAdapter.getData();
+                        final Doc doc = data.get(position);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setTitle(getString(R.string.open_with_label));
+                        builder.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                openChromeTab(doc);
+                            }
+                        });
+                        builder.setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(getActivity(), NewsDetailActivity.class);
+                                intent.putExtra(NewsDetailActivity.DOC_KEY,doc);
+                                startActivity(intent);
+                            }
+                        });
+                        builder.show();
+
+
+                    }
+                }
+        );
         mFragmentNewsGridBinding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -121,7 +160,7 @@ public class NewsGridFragment extends Fragment{
         return mFragmentNewsGridBinding.getRoot();
     }
 
-    public void fetchDataFromAPI(int page){
+    public void fetchDataFromAPI(final int page){
 
         Log.d(FRAGMENT_TAG,"Loading page--> "+page);
         NetworkUtils networkUtils = new NetworkUtils(getActivity());
@@ -134,6 +173,26 @@ public class NewsGridFragment extends Fragment{
                 List<Doc> newData = stories.getResponse().getDocs();
                 mNewsItemRecyclerViewAdapter.addData(newData);
                 mFragmentNewsGridBinding.swipeContainer.setRefreshing(false);
+                retryRemaining = 5;
+            }
+
+            @Override
+            public void onFailure() {
+                Log.d(FRAGMENT_TAG,"Retrying request for page--> "+page);
+                Log.d(FRAGMENT_TAG,"Retrying count--> "+retryRemaining);
+                mFragmentNewsGridBinding.swipeContainer.setRefreshing(false);
+                if(retryRemaining>0){
+                    retryRemaining--;
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            fetchDataFromAPI(page);
+
+                        }
+                    },5000);
+
+                }
             }
         });
 
@@ -152,5 +211,18 @@ public class NewsGridFragment extends Fragment{
     public void onStop() {
         getActivity().unregisterReceiver(mBroadcastReceiver);
         super.onStop();
+    }
+
+    private void openChromeTab(Doc doc){
+        // Use a CustomTabsIntent.Builder to configure CustomTabsIntent.
+        String url = doc.getWebUrl();
+        CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
+        // set toolbar color and/or setting custom actions before invoking build()
+        builder.setToolbarColor(ContextCompat.getColor(getActivity(), R.color.colorAccent));
+        // Once ready, call CustomTabsIntent.Builder.build() to create a CustomTabsIntent
+        CustomTabsIntent customTabsIntent = builder.build();
+        builder.addDefaultShareMenuItem();
+        // and launch the desired Url with CustomTabsIntent.launchUrl()
+        customTabsIntent.launchUrl(getActivity(), Uri.parse(url));
     }
 }

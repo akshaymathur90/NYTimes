@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,7 +41,10 @@ public class NewsItemRecyclerViewAdapter extends RecyclerView.Adapter {
         int initalSize = mData.size();
         mData.addAll(data);
         int finalSize = mData.size();
-        notifyItemRangeChanged(initalSize,finalSize);
+        notifyItemRangeChanged(initalSize,finalSize-initalSize);
+    }
+    public List<Doc> getData(){
+        return mData;
     }
 
     public void clear(){
@@ -122,22 +126,6 @@ public class NewsItemRecyclerViewAdapter extends RecyclerView.Adapter {
 
             Glide.with(mContext).load(imageURL).into(mNewsItemLayoutBinding.ivNewsThumbnail);
 
-            mNewsItemLayoutBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Use a CustomTabsIntent.Builder to configure CustomTabsIntent.
-                    String url = doc.getWebUrl();
-                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                    // set toolbar color and/or setting custom actions before invoking build()
-                    builder.setToolbarColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-                    // Once ready, call CustomTabsIntent.Builder.build() to create a CustomTabsIntent
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    builder.addDefaultShareMenuItem();
-                    // and launch the desired Url with CustomTabsIntent.launchUrl()
-                    customTabsIntent.launchUrl(mContext, Uri.parse(url));
-
-                }
-            });
         }
     }
 
@@ -157,22 +145,8 @@ public class NewsItemRecyclerViewAdapter extends RecyclerView.Adapter {
             }else{
                 mNoThumbnailNewsItemBinding.tvNewsDesk.setText(doc.getNewsDesk());
             }
-            mNoThumbnailNewsItemBinding.getRoot().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Use a CustomTabsIntent.Builder to configure CustomTabsIntent.
-                    String url = doc.getWebUrl();
-                    CustomTabsIntent.Builder builder = new CustomTabsIntent.Builder();
-                    // set toolbar color and/or setting custom actions before invoking build()
-                    builder.setToolbarColor(ContextCompat.getColor(mContext, R.color.colorAccent));
-                    // Once ready, call CustomTabsIntent.Builder.build() to create a CustomTabsIntent
-                    CustomTabsIntent customTabsIntent = builder.build();
-                    builder.addDefaultShareMenuItem();
-                    // and launch the desired Url with CustomTabsIntent.launchUrl()
-                    customTabsIntent.launchUrl(mContext, Uri.parse(url));
-
-                }
-            });
         }
     }
+
+
 }
